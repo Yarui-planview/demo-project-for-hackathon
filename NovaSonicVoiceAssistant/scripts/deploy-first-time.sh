@@ -13,7 +13,12 @@ npm run installall
 echo "=== Building components ==="
 npm run build
 
-# Step 3: Deploy the initial infrastructure
+# Step 3: Bootstrap CDK (required for new AWS accounts)
+echo "=== Bootstrapping CDK ==="
+cd infra && npx cdk bootstrap --require-approval never
+cd ..
+
+# Step 4: Deploy the initial infrastructure
 echo "=== Deploying infrastructure (first pass) ==="
 cd infra && npx cdk deploy --require-approval never
 cd ..

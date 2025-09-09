@@ -106,8 +106,13 @@ export class SmartTodoAuthConstruct extends Construct {
     );
     
     // Generate a unique domain prefix for Cognito hosted UI
+    // Use account ID and region to create a unique but consistent suffix
+    const accountId = cdk.Stack.of(this).account;
+    const region = cdk.Stack.of(this).region;
+    const baseId = cdk.Names.uniqueId(this.userPool).substring(0, 4);
+    const accountHash = accountId.substring(0, 4);
     const domainPrefix = props.cognitoDomain || 
-      `${resourcePrefix}${appName.toLowerCase()}-${cdk.Names.uniqueId(this.userPool).substring(0, 8).toLowerCase()}`;
+      `${resourcePrefix}${appName.toLowerCase()}-${baseId}-${accountHash}`.toLowerCase();
     
     // Add domain to the user pool
     this.userPoolDomain = this.userPool.addDomain('CognitoDomain', {
