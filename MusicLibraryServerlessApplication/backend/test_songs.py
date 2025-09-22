@@ -265,3 +265,29 @@ class TestGetUserIdFromContext:
     def test_get_user_id_returns_mock_id(self):
         result = get_user_id_from_context()
         assert result == "mock-user-id"
+
+class TestFormatDuration:
+    def test_format_duration_basic(self):
+        from models import format_duration
+        
+        # Test basic formatting
+        assert format_duration(225) == "3:45"  # 3 minutes 45 seconds
+        assert format_duration(61) == "1:01"   # 1 minute 1 second
+        assert format_duration(60) == "1:00"   # exactly 1 minute
+        assert format_duration(0) == "0:00"    # zero seconds
+
+    def test_format_duration_edge_cases(self):
+        from models import format_duration
+        
+        # Test edge cases
+        assert format_duration(None) == "0:00"  # None input
+        assert format_duration(-5) == "0:00"    # negative input
+        assert format_duration(3661) == "61:01" # over an hour (61 minutes 1 second)
+
+    def test_format_duration_single_digits(self):
+        from models import format_duration
+        
+        # Test that seconds are zero-padded
+        assert format_duration(65) == "1:05"   # 1 minute 5 seconds
+        assert format_duration(7) == "0:07"    # 7 seconds
+        assert format_duration(120) == "2:00"  # exactly 2 minutes

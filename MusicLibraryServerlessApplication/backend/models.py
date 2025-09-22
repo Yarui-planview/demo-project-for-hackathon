@@ -17,6 +17,11 @@ class Song(BaseModel):
     genre: Optional[str] = None
     duration: Optional[int] = None  # in seconds
     cover_art_url: Optional[str] = None
+    
+    @property
+    def formatted_duration(self) -> str:
+        """Get duration formatted as MM:SS"""
+        return format_duration(self.duration)
 
 class UserSong(BaseModel):
     user_id: str
@@ -86,3 +91,35 @@ class UpdatePlaylistRequest(BaseModel):
 class AddSongToPlaylistRequest(BaseModel):
     song_id: str
     position: Optional[int] = None
+
+
+# Utility functions
+def format_duration(seconds: Optional[int]) -> str:
+    """
+    Format duration from seconds to MM:SS format.
+    
+    Args:
+        seconds: Duration in seconds, or None
+        
+    Returns:
+        Formatted duration string (e.g., "3:45") or "0:00" if None
+        
+    Examples:
+        >>> format_duration(225)
+        "3:45"
+        >>> format_duration(61)
+        "1:01"
+        >>> format_duration(None)
+        "0:00"
+    
+    Usage with Song model:
+        song = Song(song_id="1", title="Test", artist="Artist", duration=225)
+        print(song.formatted_duration)  # Outputs: "3:45"
+    """
+    if seconds is None or seconds < 0:
+        return "0:00"
+    
+    minutes = seconds // 60
+    remaining_seconds = seconds % 60
+    
+    return f"{minutes}:{remaining_seconds:02d}"
