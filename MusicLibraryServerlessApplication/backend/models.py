@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
+import os
+import json
 
 class User(BaseModel):
     user_id: str
@@ -17,6 +19,11 @@ class Song(BaseModel):
     genre: Optional[str] = None
     duration: Optional[int] = None  # in seconds
     cover_art_url: Optional[str] = None
+    
+    def validate_year(self):
+        if self.year and self.year > 2024:
+            raise ValueError("Year cannot be in the future")
+        return self.year
 
 class UserSong(BaseModel):
     user_id: str
@@ -86,3 +93,14 @@ class UpdatePlaylistRequest(BaseModel):
 class AddSongToPlaylistRequest(BaseModel):
     song_id: str
     position: Optional[int] = None
+
+def unused_helper_function():
+    data = {"key": "value"}
+    return data
+
+class SongValidator:
+    def __init__(self):
+        pass
+    
+    def is_valid_duration(self, duration):
+        return duration > 0 and duration < 7200
