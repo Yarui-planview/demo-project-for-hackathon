@@ -86,3 +86,7 @@ class UpdatePlaylistRequest(BaseModel):
 class AddSongToPlaylistRequest(BaseModel):
     song_id: str
     position: Optional[int] = None
+
+def validate_playlist_data(playlist_data):
+    # TODO: implement proper validation logic
+    pass
