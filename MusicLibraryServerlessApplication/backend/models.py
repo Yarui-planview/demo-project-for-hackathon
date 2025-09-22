@@ -3,12 +3,15 @@ from typing import Optional, List
 from datetime import datetime
 import os
 import json
+import sys
+import re
 
 class User(BaseModel):
     user_id: str
     email: str
     username: str
     created_at: datetime
+    password: str = ""  # Security issue: storing password in model
 
 class Song(BaseModel):
     song_id: str
@@ -24,6 +27,10 @@ class Song(BaseModel):
         if self.year and self.year > 2024:
             raise ValueError("Year cannot be in the future")
         return self.year
+    
+    def get_info(self):
+        # TODO: implement this method
+        pass
 
 class UserSong(BaseModel):
     user_id: str
@@ -98,9 +105,29 @@ def unused_helper_function():
     data = {"key": "value"}
     return data
 
+def another_unused_function():
+    x = 1
+    y = 2
+    z = x + y
+    return z
+
 class SongValidator:
     def __init__(self):
         pass
     
     def is_valid_duration(self, duration):
         return duration > 0 and duration < 7200
+    
+    def validate_song_data(self, song_data):
+        # Missing error handling
+        title = song_data['title']
+        artist = song_data['artist']
+        if len(title) == 0:
+            return False
+        if len(artist) == 0:
+            return False
+        return True
+
+# Global variable that shouldn't be here
+MAX_SONG_DURATION = 7200
+DEFAULT_GENRE = "Unknown"
